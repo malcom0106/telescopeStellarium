@@ -1,7 +1,6 @@
 # telescopeStellarium
-_(juste en dessous des badges sympatiques à placer)_
 
-[![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)  [![forthebadge](http://forthebadge.com/images/badges/powered-by-electricity.svg)](http://forthebadge.com)
+[![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)  [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](http://forthebadge.com)
 
 Interfaçage d'un rasperry muni d'un gyroscope de type MPU-9250 et de stellarium pour avoir la position du telescope sur le logiciel en python 3.8
 
