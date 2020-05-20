@@ -30,7 +30,7 @@ def radStr_2_deg(rad):
     Returns:
         float: angle en degres
     """
-    exp = re.compile('^(-?)[0-9]{1}\.[0-9]{4,8}')
+    exp = re.compile(r'^(-?)[0-9]{1}\.[0-9]{4,8}')
     
     if(not exp.match(rad)):
         return None
@@ -79,8 +79,8 @@ def degStr_2_rad(d):
     Returns:
         float: Radians au format flottant
     """
-    exp1 = re.compile('^-?[0-9]{,3}(º|ᵒ)[0-9]{,3}\'[0-9]{,3}([\']{2}|")$')
-    exp2 = re.compile('^-?[0-9]{,3}\.[0-9]{,6}(º|ᵒ)$')
+    exp1 = re.compile(r'^-?[0-9]{,3}(º|ᵒ)[0-9]{,3}\'[0-9]{,3}([\']{2}|")$')
+    exp2 = re.compile(r'^-?[0-9]{,3}\.[0-9]{,6}(º|ᵒ)$')
 
     if(not exp1.match(d) and not exp2.match(d)):
         logging.debug("Error parametro: %s" % d)
