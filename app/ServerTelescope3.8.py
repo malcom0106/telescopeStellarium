@@ -4,7 +4,6 @@ from bitstring import BitArray, BitStream, ConstBitStream
 from pprint import pprint
 from time import sleep, time
 import coords
-from pprint import pprint
 
 logging.basicConfig(level=logging.DEBUG, format="%(filename)s: %(funcName)s - %(levelname)s: %(message)s")
 
