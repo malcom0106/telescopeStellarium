@@ -41,10 +41,7 @@ def radStr_2_deg(rad):
     
     return (r * 180) / math.pi
 
-## Transforms radians from float to string format
-#
-# \param rad Radians in float format
-# \return Signed radians in string format
+
 def rad_2_radStr(rad):
     """Transforme des radians en string
 
@@ -119,11 +116,16 @@ def degStr_2_radStr(d):
     """
     return rad_2_radStr(degStr_2_rad(d))
 
-## Transforms degrees from float to string format.
-#
-# \param deg Degrees in float format
-# \return Degrees in string format ("DºM'S''")
+
 def deg_2_degStr(deg):
+    """Transforme des degrés en string
+
+    Args:
+        deg (string): Angle en degré
+
+    Returns:
+        string: angle converti en string ("DºM'S''")
+    """
     ndeg = math.floor(float(deg))
     
     nmins = (deg - ndeg) * 60
@@ -132,13 +134,18 @@ def deg_2_degStr(deg):
     
     return "%dº%d'%d''" % (ndeg, mins, secs)
 
-## From hours in string format to radians
-# h =  HhMmSs => H+(M/60)+(S/60^2) hours
-# (hours * 15 * pi)/180
-#
-# \param h Hours in string format ("HhMmSSs")
-# \return Radians in float format
+
 def hourStr_2_rad(h):
+    """Des heures au format chaîne en radians
+        h = HhMmSs => H + (M / 60) + (S / 60 ^ 2) heures
+        (heures * 15 * pi) / 180
+
+    Args:
+        h (string): Heures au format chaîne ("HhMmSSs")
+
+    Returns:
+        float: Radians au format flottant
+    """
     exp = re.compile('^[0-9]{,3}h[0-9]{,3}m[0-9]{,3}s$')
     if(not exp.match(h)):
         logging.debug("Error in param: %s" % h)
@@ -155,19 +162,29 @@ def hourStr_2_rad(h):
 
     return round((nh * 15 * math.pi) / 180, 6)
     
-## Transforms hours from float to string format
-#
-# \param hours Hours in float format
-# \return Hours in string format ("HhMmSSs")
+
 def hour_2_hourStr(hours):
+    """ Transforme les heures du format float au format chaîne
+
+    Args:
+        hours (Float): Heures au format flottant
+
+    Returns:
+        String: Heures au format chaîne ("HhMmSSs")
+    """
     (h, m, s) = hour_min_sec(hours)
     return '%dh%dm%00.1fs' % (h, m, s)
     
-## From hours in float format, to a list with number of hours, minutes and seconds
-#
-# \param hours Hours in float format
-# \return List with (hours, minutes, seconds)
+
 def hour_min_sec(hours):
+    """Des heures au format flottant à une liste avec le nombre d'heures, de minutes et de secondes
+
+    Args:
+        hours (float): Heures au format Float
+
+    Returns:
+        tuple: tuple (heure, minute, seconde)
+    """
     h = math.floor(hours)
     
     hours_m = (hours - h)*60.0
@@ -175,7 +192,7 @@ def hour_min_sec(hours):
     
     s = (hours_m - m)*60.0
     
-    #Avoiding the X.60 values
+    #Éviter les valeurs X.60
     if s >= 59.99:
         s = 0
         m += 1
@@ -190,7 +207,16 @@ def hour_min_sec(hours):
 # \param degs Degrees in float format
 # \return List with (degrees, minutes, seconds)
 def grad_min_sec(degs):
-    #Avoiding operations with negative values
+    """De degrés au format flottant, à une liste avec nombre de degrés, minutes et secondes
+
+    Args:
+        degs (float): Dégre en float
+
+    Returns:
+        tuple: tuple avec (degré, minute, seconde)
+    """
+
+    #Eviter les opération avec des négatifs
     to_neg = False
     if degs < 0:
         degs = math.fabs(degs)
@@ -203,7 +229,7 @@ def grad_min_sec(degs):
     
     s = (degs_m - m)*60.0
     
-    #Avoiding the .60 values
+    #Eviter les valeurs .60
     if s >= 59.99:
         s = 0
         m += 1
@@ -216,30 +242,41 @@ def grad_min_sec(degs):
     
     return (d, m, s)
 
-## Transforms the values obtained from "Stellarium Telescope Protocol", to a list with each value in string format
-# ("HhMmSSs", "DºM'S''", "HhMmSs")
-#
-# \param ra Right ascension
-# \param dec Declination
-# \param mtime Timestamp in microseconds
-# \return List with (Right ascension, declination, time) => ("HhMmSSs", "DºM'S''", "HhMmSs")
+
 def eCoords2str(ra, dec, mtime):
+    """Transforme les valeurs obtenues à partir de "Stellarium Telescope Protocol" en une liste avec chaque valeur au format chaîne ("HhMmSSs", "DºM'S ''", "HhMmSs")
+
+    Args:
+        ra (float): Ascension droite
+        dec (float): Déclinaison
+        mtime (float): Horodatage en microsecondes
+
+    Returns:
+        tuple: tuple avec (Ascension droite, déclinaison, heure) => ("HhMmSSs", "DºM'S ''", "HhMmSs")
+    """
+
     ra_h = ra*12.0/2147483648
     dec_d = dec*90.0/1073741824
     time_s = math.floor(mtime / 1000000)
     
     return ('%dh%dm%00.0fs' % hour_min_sec(ra_h), '%dº%d\'%00.0f\'\'' % grad_min_sec(dec_d), strftime("%Hh%Mm%Ss", localtime(time_s)))
     
-## Transforms coordinates from radians to J2000 string format ("HhMmSSs/GºM'SS'' at Fecha")
-#
-# \param ra Right ascension (float)
-# \param dec Declination (float)
-# \param mtime Timestamp in microseconds (float)
-# \return Equiatorial coordinates in J2000 string format
+
 def toJ2000(ra, dec, mtime):
-# HhMmSs => H+(M/60)+(S/60^2) hours
-# DºM'S'' => D+(M/60)+(S/60^2) degrees
-# From hours to radians: (hours * 15 * pi)/180
+    """Transforme les coordonnées des radians au format de chaîne J2000 ("HhMmSSs / GºM'SS" à Fecha ")
+
+    Args:
+        ra (float): Ascension droite
+        dec (float): Déclinaison 
+        mtime (float): Horodatage en microsecondes
+
+    Returns:
+        string: Coordonnées équatoriales au format chaîne J2000
+    """
+
+# HhMmSs => H+(M/60)+(S/60^2) houres
+# DºM'S'' => D+(M/60)+(S/60^2) degres
+# heures vers radian: (hours * 15 * pi)/180
     
     ra_h = ra*12.0/2147483648
     (h1, m1, s1) = hour_min_sec(ra_h)
@@ -247,19 +284,23 @@ def toJ2000(ra, dec, mtime):
     dec_d = dec*90.0/1073741824
     (h2, m2, s2) = grad_min_sec(dec_d)
 
-    time_s = math.floor(mtime / 1000000)  # From microseconds to seconds (Unix timestamp)
+    time_s = math.floor(mtime / 1000000)  # Depuis microsecondes vers secondes (Unix timestamp)
     t = ctime(time_s)
             
     return '%dh%dm%00.0fs/%dº%d\'%00.1f\'\' at %s' % (h1, m1, s1, h2, m2, s2, t)
         
 
-## Transforms coordinates from radians to the "Stellarium Telescope Protocol" format
-#
-# \param ra Right ascension (float)
-# \param dec Declination (float)
-# \return List with (Right ascension, Declination) in the "Stellarium Telescope Protocol" format
 def rad_2_stellarium_protocol(ra, dec):
-    
+    """Transforme les coordonnées des radians au format "Stellarium Telescope Protocol"
+
+    Args:
+        ra (float): Ascension droite
+        dec (float): Déclinaison 
+
+    Returns:
+        tuple: Tuple avec (Ascension droite, Déclinaison) au format "Stellarium Telescope Protocol"
+    """
+
     ra_h = rad_2_hour(ra)
     
     dec_d = (dec * 180) / math.pi
