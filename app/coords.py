@@ -3,6 +3,33 @@ import re
 import logging
 from time import time, ctime, strftime, localtime
 
+def hauteur(dec=0.0, lat=48.927171, H=0.0) :
+    """Calcul de la Hauteur
+
+    Args:
+        dec (float): Declinaison en radian
+        lat (float): Latitude 
+        H (float): Angle Horaire de l'etoile en radian 
+
+    Returns:
+        float: Hauteur en radian
+    """
+
+    sinushauteur = math.sin(dec)*math.sin(lat) - math.cos(dec)*math.cos(lat)*math.cos(H)
+    haut = math.asin(sinushauteur)
+    return haut
+
+def azimuth(dec=0.0, lat=48.927171, hau=0.0, H=0.0) : 
+    cosazimuth = ( math.sin(dec) - math.sin(lat) * math.sin(hau) ) / ( math.cos(lat) * math.cos(hau) )
+
+    sinazimuth = ( math.cos(dec) * math.sin (H) ) / math.cos(hau)
+
+    if(sinazimuth > 0 ) : 
+        return + math.acos(cosazimuth)
+    else : 
+        return - math.acos(cosazimuth)
+
+
 
 def rad_2_hour(rads):
     """Des radians aux heures, avec jusqu'à six décimales de précision (float) 
@@ -41,6 +68,8 @@ def radStr_2_deg(rad):
     
     return (r * 180) / math.pi
 
+def rad_2_deg(rad):
+    return (rad * 180) / math.pi
 
 def rad_2_radStr(rad):
     """Transforme des radians en string
@@ -79,8 +108,8 @@ def degStr_2_rad(d):
     Returns:
         float: Radians au format flottant
     """
-    exp1 = re.compile(r'^-?[0-9]{,3}(º|ᵒ)[0-9]{,3}\'[0-9]{,3}([\']{2}|")$')
-    exp2 = re.compile(r'^-?[0-9]{,3}\.[0-9]{,6}(º|ᵒ)$')
+    exp1 = re.compile('^-?[0-9]{,3}(º|ᵒ)[0-9]{,3}\'[0-9]{,3}([\']{2}|")$')
+    exp2 = re.compile('^-?[0-9]{,3}\.[0-9]{,6}(º|ᵒ)$')
 
     if(not exp1.match(d) and not exp2.match(d)):
         logging.debug("Error parametro: %s" % d)
