@@ -91,7 +91,7 @@ class Telescope_Client() :
 
                 logging.info("Size: %d, Type: %d, Time: %d, RA: %d (%s), DEC: %d (%s)" % (msize, mtype, mtime, ra_uint, ra, dec_int, dec))
                 (sra, sdec, stime) = coords.eCoords2str(float("%f" % ra_uint), float("%f" % dec_int), float("%f" %  mtime))
-                logging.info(f"Coordonnées Ciblé Par Stellarium : sra : {sra} and sdec = {sdec}")
+                logging.info(f"Coordonnées Ciblé Par Stellarium : sra : {sra} - sdec = {sdec} - stime = {stime}")
 
                 if self.positionInit == None : 
                     self.positionInit = self.positionCible = [coords.hourStr_2_rad(sra),coords.degStr_2_rad(sdec)]
