@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from bitstring import BitArray, BitStream, ConstBitStream
 from time import sleep, time
 import coords
@@ -52,7 +55,7 @@ class Telescope_Client() :
 
             byte = self.act_pos(self.positionTelescope[0],self.positionTelescope[1])
 
-            logging.info(f"Nouvel coord. Equ. envoyé a Stellarium : sra : {self.positionTelescope[0]} and sdec = {self.positionTelescope[1]}")
+            logging.info(f"Nouvel coord. Equ. envoye a Stellarium : sra : {self.positionTelescope[0]} and sdec = {self.positionTelescope[1]}")
             self.connexion_avec_client.send(byte.bytes)
             sleep(1)
         except WindowsError as w : 
@@ -134,6 +137,7 @@ class Telescope_Client() :
                 self.positionTelescope = [azi, haut]
             except Exception as ex :
                 logging.warning(ex)
+                exit()
             except KeyboardInterrupt : 
                 print("bye !")
                 exit()
